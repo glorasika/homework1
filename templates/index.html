@@ -1,18 +1,46 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="display-2">
-Latest Blogs
+
+<div>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+            <h1 class="text-center mb-5">Requested Leave</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center">
+        <a class="btn btn-outline-secondary" href="{{ url_for('request_leave') }}" role="button">Request Leave</a>
+    </div>
+
+    {% if requested_leave %}
+    <div class="d-flex justify-content-center">
+        <div class="text-center" style="width: 600px">
+            <table class="table table-bordered">
+                <thead style="background-color:aliceblue;">
+                    <tr>
+                        <th class="col-2">Name</th>
+                        <th class="col-2">Leave Date</th>
+                    </tr>
+                </thead>
+                {% for each_request in requested_leave %}
+                <tbody style="background-color:rgb(253, 231, 235);">
+                    <tr>
+                        <td>{{ each_request[0] }} {{ each_request[1] }}</td>
+                        <td>{{ each_request[2] }}</td>
+                    </tr>
+                </tbody>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center">
+        <p>Currently no requested leave.</p>
+    </div>
+    {% endif %}
 </div>
 
-    <!-- {% if blogs %}
-        {% for blog in blogs %}
-            <div class="shadow p-3 mb-5 bg-light rounded" style="margin: 20px 40px 0px 40px;">
-                <a href="blogs/{{ blog['blog_id'] }}">{{ blog['title'] }}</a>
-                Written by {{ blog['username'] }}
-            </div>
-        {% endfor %}
-    {% else %}
-        <div class="displya-3">No Blog</div>
-    {% endif %} -->
 
 {% endblock %}
