@@ -19,9 +19,45 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/login")
+@app.route("/login/", methods=['GET', 'POST'])
 def login():
-    return render_template("login.html")
+    if request.method == 'GET':
+        return render_template("login.html")
+    
+    elif request.method == 'POST':
+        loginForm = request.form
+        username = loginForm['username']
+        queryStatement = f"SELECT * FROM employees WHERE username = '{username}'"
+        cur = mysql.get_db().cursor()
+        numRow = cur.execute(queryStatement)
+
+        if numRow > 0:
+            user = cur.fetchone()
+
+            if check_password_hash(user[4], loginForm['password']):
+                session['login'] = True
+                session['username'] = user[3]
+                session['firstName'] = user[1]
+                session['lastName'] = user[2]
+
+                print(session['username'])
+                flash('Welcome ' + session['firstName'], 'success')
+                return redirect('/')
+            
+            else:
+                cur.close()
+                flash('Password is incorrect!', 'danger')
+                
+        else:
+            cur.close()
+            flash('User not found!', 'danger')
+            return render_template('login.html')
+        
+        cur.close()
+        return render_template('login.html')
+    
+    return render_template('login.html')
+
 
 
 @app.route("/register/", methods=['GET', 'POST'])
@@ -38,7 +74,7 @@ def register():
 
         if numRow > 0:
             employee = cur.fetchone()
-            if employeeDetails['username'] in employee['username']:
+            if employeeDetails['username'] in employee[3]:
                 flash('This username isn\'t available. Please try another.', 'danger')
                 return render_template("register.html")
             
