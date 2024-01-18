@@ -1,0 +1,5 @@
+mysql_host : 'localhost'
+mysql_user : 'your username'
+mysql_password : 'your password'
+mysql_db : 'leavedb'
+secret_key : 'create your own secret key'
